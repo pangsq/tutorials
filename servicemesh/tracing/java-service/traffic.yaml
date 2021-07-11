@@ -1,0 +1,37 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  labels:
+    app: java-service
+  name: java-service
+spec:
+  gateways:
+  - mesh
+  - java-service
+  hosts:
+  - java-service
+  - java.default.svc
+  http:
+  - name: default
+    route:
+    - destination:
+        host: java-service
+---
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  labels:
+    app: java-service
+  name: java-service
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+  - hosts:
+    - java.default.svc
+    name: http
+    port:
+      name: http
+      number: 80
+      protocol: HTTP
+    tls: {}

@@ -1,0 +1,37 @@
+apiVersion: networking.istio.io/v1beta1
+kind: VirtualService
+metadata:
+  labels:
+    app: go-service
+  name: go-service
+spec:
+  gateways:
+  - mesh
+  - go-service
+  hosts:
+  - go-service
+  - go.default.svc
+  http:
+  - name: default
+    route:
+    - destination:
+        host: go-service
+---
+apiVersion: networking.istio.io/v1beta1
+kind: Gateway
+metadata:
+  labels:
+    app: go-service
+  name: go-service
+spec:
+  selector:
+    istio: ingressgateway
+  servers:
+  - hosts:
+    - go.default.svc
+    name: http
+    port:
+      name: http
+      number: 80
+      protocol: HTTP
+    tls: {}
